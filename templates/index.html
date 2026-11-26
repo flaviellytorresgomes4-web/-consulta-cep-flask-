@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Consulta de CEP</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 40px 15px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            height: 45px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            height: 45px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .resultado {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e9f5ff;
+            border-radius: 5px;
+        }
+
+        .resultado h2 {
+            color: #0056b3;
+        }
+
+        .resultado p {
+            margin: 12px 0;
+        }
+
+        .erro {
+            margin-top: 20px;
+            padding: 12px;
+            color: #721c24;
+            background-color: #f8d7da;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Consulta de CEP</h1>
+
+        <!-- Formulário -->
+
+        <form action="{{ url_for('buscarcep') }}" method="POST">
+
+            <label for="cep">Digite o CEP:</label>
+
+            <input
+                type="text"
+                id="cep"
+                name="cep"
+                placeholder="Ex: 70040010"
+                value="{{ cep or '' }}"
+                maxlength="8"
+                inputmode="numeric"
+                autocomplete="postal-code"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)"
+                required
+            >
+
+            <button type="submit">Buscar</button>
+
+        </form>
+
+
+        <!-- Mensagem de erro -->
+
+        {% if erro %}
+
+            <div class="erro">
+                {{ erro }}
+            </div>
+
+        {% endif %}
+
+
+        <!-- Resultado da consulta -->
+
+        {% if endereco %}
+
+            <div class="resultado">
+
+                <h2>Dados do Endereço</h2>
+
+                <p>
+                    <strong>CEP:</strong>
+                    {{ endereco.cep }}
+                </p>
+
+                <p>
+                    <strong>Logradouro:</strong>
+                    {{ endereco.logradouro or 'Não informado' }}
+                </p>
+
+                <p>
+                    <strong>Complemento:</strong>
+                    {{ endereco.complemento or 'Não informado' }}
+                </p>
+
+                <p>
+                    <strong>Bairro:</strong>
+                    {{ endereco.bairro or 'Não informado' }}
+                </p>
+
+                <p>
+                    <strong>Cidade:</strong>
+                    {{ endereco.localidade }}
+                </p>
+
+                <p>
+                    <strong>Estado:</strong>
+                    {{ endereco.estado or endereco.uf }}
+                </p>
+
+                <p>
+                    <strong>IBGE:</strong>
+                    {{ endereco.ibge or 'Não informado' }}
+                </p>
+
+                <p>
+                    <strong>DDD:</strong>
+                    {{ endereco.ddd or 'Não informado' }}
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
